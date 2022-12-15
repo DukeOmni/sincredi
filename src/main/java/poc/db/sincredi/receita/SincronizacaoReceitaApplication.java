@@ -32,6 +32,11 @@ package poc.db.sincredi.receita;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 @SpringBootApplication
 public class SincronizacaoReceitaApplication {
 
@@ -39,8 +44,22 @@ public class SincronizacaoReceitaApplication {
         // Exemplo como chamar o "serviço" do Banco Central.
         // ReceitaService receitaService = new ReceitaService();
         // receitaService.atualizarConta("0101", "123456", 100.50, "A");
+
         SpringApplication.run(SincronizacaoReceitaApplication.class, args);
-        System.out.println("hello world");
+        try {
+            if (args.length<0 && args[0].endsWith(".csv")){
+                String sCurrentLine;
+                File inFile = new File(args[0]);
+                BufferedReader br = new BufferedReader(new FileReader(inFile));
+                while ((sCurrentLine = br.readLine()) != null) {
+                    System.out.println(sCurrentLine);
+                }
+            }else{
+                throw new Exception("Arquivo incompreensível");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     

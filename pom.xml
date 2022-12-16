@@ -10,7 +10,7 @@
     </parent>
     <groupId>poc.db.sincredi</groupId>
     <artifactId>receita</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>1.0.0-STABLE</version>
     <name>receita</name>
     <description>receita</description>
     <properties>

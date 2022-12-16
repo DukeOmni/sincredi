@@ -29,30 +29,40 @@ agencia;conta;saldo;status
 */
 package poc.db.sincredi.receita;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import poc.db.sincredi.receita.service.ReceitaService;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 
 @SpringBootApplication
 public class SincronizacaoReceitaApplication {
 
+    //@Value("${csv.config.parser:';'}")
+    private static String DELIMITER=";";
     public static void main(String[] args) {
         // Exemplo como chamar o "serviço" do Banco Central.
         // ReceitaService receitaService = new ReceitaService();
         // receitaService.atualizarConta("0101", "123456", 100.50, "A");
 
         SpringApplication.run(SincronizacaoReceitaApplication.class, args);
+        ReceitaService receitaService = new ReceitaService();
         try {
-            if (args.length<0 && args[0].endsWith(".csv")){
-                String sCurrentLine;
-                File inFile = new File(args[0]);
-                BufferedReader br = new BufferedReader(new FileReader(inFile));
-                while ((sCurrentLine = br.readLine()) != null) {
-                    System.out.println(sCurrentLine);
+            if (args.length>0 && args[0].endsWith(".csv")){
+                String cabecalhoArquivo;
+                String tuplasArquivo;
+
+                BufferedReader br = new BufferedReader(new FileReader(args[0]));
+                cabecalhoArquivo = br.readLine();
+                while ((tuplasArquivo = br.readLine()) != null) {
+                    String[] atributoTupla = tuplasArquivo.split(DELIMITER);
+                    receitaService.atualizarConta(atributoTupla[0],atributoTupla[1],Double.valueOf(atributoTupla[2].replaceAll(",",".")),atributoTupla[3]);
                 }
             }else{
                 throw new Exception("Arquivo incompreensível");
